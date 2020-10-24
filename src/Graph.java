@@ -1,218 +1,181 @@
-import java.lang.Math;
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
-public class Graph {
-	public boolean prefix = true;
-	private int nodes_count;
-	private int[][] nodes;
-	private ArrayList<String> node_names = new ArrayList<String>();
-	private ArrayList<int[]> relations = new ArrayList<int[]>();
-	private ArrayList<int[]> related_nodes_list = new ArrayList<int[]>();
-	private int[][] focused_nodes;
+public class Graph{
 	
+	public int nodes_count;
+	public int edges_count;
 	
-	public Graph(int nodes_count) {
-		// Constructs a graph with 50% probability of relations between nodes.
-		double probability = 50;
-		this.nodes_count = nodes_count;
-		this.nodes = new int[nodes_count][nodes_count];
-		this.createRandomGraph(probability);
-		this.setNodeList();
-	}
+	public ArrayList<Node>	nodes;		// Liste aller Ecken.
+	public ArrayList<Relation>	edges;	// Liste aller Kanten.
 	
-	public Graph(int nodes_count, double probability) {
-		// Constructs a random graph with a given amount of nodes.
-		this.nodes_count = nodes_count;
-		this.nodes = new int[nodes_count][nodes_count];
-		this.createRandomGraph(probability);
-		this.setNodeList();
-	}
-	
-	public Graph(int[][] nodes) {
-		// Constructs a given graph and counts its nodes.
-		this.nodes = nodes;
-		this.nodes_count = nodes.length;
-		this.setNodeList();
-	}
-	
-	private void setNodeList() {
-		String[] names = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", 
-		"aa", "ab", "ac", "ad", "ae", "af", "ag", "ah", "ai", "aj", "ak", "al", "am", "an", "ao", "ap", "aq", "ar", "as", "at", "au", "av", "aw", "ax", "ay", "az",
-		"ba", "bb", "bc", "bd", "be", "bf", "bg", "bh", "bi", "bj", "bk", "bl", "bm", "bn", "bo", "bp", "bq", "br", "bs", "bt", "bu", "bv", "bw", "bx", "by", "bz",
-		"ca", "cb", "cc", "cd", "ce", "cf", "cg", "ch", "ci", "cj", "ck", "cl", "cm", "cn", "co", "cp", "cq", "cr", "cs", "ct", "cu", "cv", "cw", "cx", "cy", "cz",
-		"da", "db", "dc", "dd", "de", "df", "dg", "dh", "di", "dj", "dk", "dl", "dm", "dn", "do", "dp", "dq", "dr", "ds", "dt", "du", "dv", "dw", "dx", "dy", "dz",
-		"ea", "eb", "ec", "ed", "ee", "ef", "eg", "eh", "ei", "ej", "ek", "el", "em", "en", "eo", "ep", "eq", "er", "es", "et", "eu", "ev", "ew", "ex", "ey", "ez",
-		"fa", "fb", "fc", "fd", "fe", "ff", "fg", "fh", "fi", "fj", "fk", "fl", "fm", "fn", "fo", "fp", "fq", "fr", "fs", "ft", "fu", "fv", "fw", "fx", "fy", "fz",
-		"ga", "gb", "gc", "gd", "ge", "gf", "gg", "gh", "gi", "gj", "gk", "gl", "gm", "gn", "go", "gp", "gq", "gr", "gs", "gt", "gu", "gv", "gw", "gx", "gy", "gz",
-		"ha", "hb", "hc", "hd", "he", "hf", "hg", "hh", "hi", "hj", "hk", "hl", "hm", "hn", "ho", "hp", "hq", "hr", "hs", "ht", "hu", "hv", "hw", "hx", "hy", "hz",
-		"ia", "ib", "ic", "id", "ie", "if", "ig", "ih", "ii", "ij", "ik", "il", "im", "in", "io", "ip", "iq", "ir", "is", "it", "iu", "iv", "iw", "ix", "iy", "iz",
-		};
-		
-		this.node_names = new ArrayList<String>();
-				
+	public Graph(int nodes_count_) {
+		this.nodes_count = nodes_count_;
+		this.edges_count = 0;
+		this.nodes = new ArrayList<Node>();
+		this.edges = new ArrayList<Relation>();
 		for (int ii = 0; ii < this.nodes_count; ii++) {
-			this.node_names.add(names[ii]);
+			nodes.add(new Node(ii));
 		}
 	}
-	
-	public void printNodeNames() {
-		if(this.prefix) {
-			System.out.print("   ");
+	public Graph(int nodes_count_, int propability_) {
+		Random r = new Random();
+		this.nodes_count = nodes_count_;
+		this.nodes = new ArrayList<Node>();
+		this.edges = new ArrayList<Relation>();
+		for (int ii = 0; ii < this.nodes_count; ii++) {
+			nodes.add(new Node(ii));
 		}
-		System.out.println(this.node_names);
+		for (Node pointer : nodes) {
+			for (Node receiver : nodes) {
+				if(pointer == receiver) {
+					continue;
+				}
+				int p = r.nextInt(200);
+				if(p <= propability_) {
+					this.createUndirectedRelation(pointer, receiver);
+				}
+			}
+		}
 	}
+	public Graph(int[][] adjacency_matrix_) {
+		this.nodes_count = adjacency_matrix_.length;
+		this.edges_count = 0;
+		this.nodes = new ArrayList<Node>();
+		this.edges = new ArrayList<Relation>();
+		for (int vv = 0; vv < this.nodes_count; vv++) {
+			nodes.add(new Node(vv));
+		}
+		for (int jj = 0; jj < this.nodes_count; jj++) {
+			for (int ii = 0; ii < this.nodes_count; ii++) {
+				if(adjacency_matrix_[jj][ii] == 1) {
+					this.createDirectedRelation(this.nodes.get(ii), this.nodes.get(jj));
+				}
+			}
+		}
+	}
+	public Graph(String adjacency_list_) {
+		this.nodes = new ArrayList<Node>();
+		this.edges = new ArrayList<Relation>();
+		
+		String[] parsedString = adjacency_list_.replaceAll("]", "").split(", \\[");
+		for (int vv = 0; vv < parsedString.length; vv++) {
+			nodes.add(new Node(vv));
+		}
+		this.nodes_count = parsedString.length;
+		this.edges_count = 0;
+		
+		for (int ii = 0; ii < parsedString.length; ii++) {
+			String[] values = parsedString[ii].replaceAll("\\[", "").split(", ");
+			for (String value : values) {
+				this.createDirectedRelation(this.nodes.get(ii), this.nodes.get(Integer.parseInt(value)));
+			}
+		}
+	}	
 	
+	public void createRandomRelations(int relations_count_) {
+		for (int ii = 0; ii < relations_count_; ii++) {
+			Node pointer = this.getRandomNode();
+			Node receiver = this.getRandomNode(pointer.index);
+			this.createUndirectedRelation(pointer, receiver);
+		}
+	}
+	protected void createUndirectedRelation(Node node_left_, Node node_right_) {
+		Relation r1 = node_left_.relateEdge(node_right_);
+		Relation r2 = node_right_.relateEdge(node_left_);
+		if(r1 != null) { 
+			this.edges.add(r1);
+		}
+		if(r2 != null) {
+			this.edges.add(r2);
+		}
+		this.edges_count = this.edges.size();
+	}
+	protected void createDirectedRelation(Node node_left_, Node node_right_) {
+		Relation r = node_left_.relateEdge(node_right_);
+		if(r != null) { 
+			this.edges.add(r);
+		}		
+		this.edges_count = this.edges.size();
+	}	
+	protected Node getRandomNode() {
+		Random r = new Random();
+		return this.nodes.get(r.nextInt(this.nodes_count));
+	}
+	protected Node getRandomNode(int exclusion_) {
+		Random r = new Random();
+		int index = exclusion_;
+		while(index == exclusion_) {
+			index = r.nextInt(this.nodes_count);
+		}		
+		return this.nodes.get(index);
+	}
+	protected int[][] createAdjacencyMatrix() {
+		int[][] matrix = new int[this.nodes_count][this.nodes_count];
+		
+		for (int jj = 0; jj < this.nodes_count; jj++) {
+			int[] arr = new int[this.nodes_count];
+			Node currentNode = this.nodes.get(jj);
+			for (int ii = 0; ii < this.nodes_count; ii++) {
+				if(currentNode.hasNeighbor(ii)) {
+					arr[ii] = 1;
+				}else {
+					arr[ii] = 0;
+				}
+			}
+			matrix[jj] = arr;			
+		} 
+		return matrix;
+	}
 	public void printNodeList() {
-		String list = "[";
-		for (int dd = 0; dd < this.relations.size(); dd++) {
-			list += "[" + this.relations.get(dd)[0] + "," + this.relations.get(dd)[1] + "]";
-			
-			if(dd <= this.relations.size()-2) {
-				list += ", ";
-			}
-		}
-		list += "]";
-		System.out.println(list);
-	}
-	
-	public void printRelatedNodeList() {
-		String list = "[";
-		for (int dd = 0; dd < this.related_nodes_list.size(); dd++) {
-			int[] arr = this.related_nodes_list.get(dd);
-			list += "[";
-			if(arr.length == 0) {
-				list += "]";
-			}
-			
-			for (int ee = 0; ee < arr.length; ee++) {
-				list += arr[ee];
-				
-				
-				if(ee <= arr.length - 2) {
-					list += ",";
-				}else{
-					list += "]";
-				}
-			}
-			if(dd <= this.related_nodes_list.size() - 2) {
-				list += ", ";
-			}
-		}
-		list += "]";
-		System.out.println(list);
-	}
-
-	private void createRandomGraph(double probability) {
-		this.relations = new ArrayList<int[]>();
+		String[] strArray = new String[this.nodes_count];
 		
-		// Creates a two-dimensional array of random the relations for the graph.
+		for (int ii = 0; ii < this.nodes_count; ii++) {			
+			strArray[ii] = String.valueOf(this.nodes.get(ii).index);
+		}   
+		System.out.println(Arrays.toString(strArray));
+	}
+	public void printNodeNameList() {
+		String[] strArray = new String[this.nodes_count];
+		
+		for (int ii = 0; ii < this.nodes_count; ii++) {			
+			strArray[ii] = this.nodes.get(ii).name;
+		}   
+		System.out.println(Arrays.toString(strArray));
+	}
+	public void printEdgeList() {
+		String[] strArray = new String[this.edges_count];
+		
+		for (int ii = 0; ii < this.edges_count; ii++) {			
+			strArray[ii] = Arrays.toString(this.edges.get(ii).getIndexArray());
+		}   
+		Arrays.sort(strArray);
+		System.out.println(Arrays.toString(strArray));
+	}
+	public void printAdjacencyList() {
+		String[] strArray = new String[this.nodes_count];
+		
 		for (int ii = 0; ii < this.nodes_count; ii++) {	
-			for (int jj = 0; jj < this.nodes_count; jj++){	
-				int edge = 0;
-				if(jj == ii) {
-					this.nodes[ii][jj] = 0;
-				}else if(ii <= jj){
-					edge = getRandomRealtion(probability);
-			
-					// Eintragung in die Adjazenzliste
-					this.nodes[ii][jj] = edge;
-					this.nodes[jj][ii] = edge;					
-			
-					//Eintragung in Eckenliste
-					if(edge == 1) {
-						int[] f = new int[2];
-						if(ii < jj) {
-							f[0] = ii;
-							f[1] = jj;
-						}else {
-							f[0] = jj;
-							f[1] = ii;
-						}						
-						this.relations.add(f);
-					}
-				}
-			}
+			int[] arr = this.nodes.get(ii).getNeighborIndexArray();
+			Arrays.sort(arr);
+			strArray[ii] = Arrays.toString(arr);
+		}   
+		System.out.println(Arrays.toString(strArray));
+	}
+	public void printAdjacencyMatrix() {
+		int[][] matrix = this.createAdjacencyMatrix(); 
+		for (int[] arr : matrix) {
+			System.out.println(Arrays.toString(arr));
 		}
-		this.createRelatedNodesListFromEdges();
+	}
+	public void printArray() {
+		int[][] matrix = this.createAdjacencyMatrix();
+		String[] str = new String[this.nodes_count];
+		for (int ii = 0; ii < this.nodes_count; ii++) {
+			str[ii] = Arrays.toString(matrix[ii]);
+		}		
+		System.out.println(Arrays.toString(str).replace('[', '{').replace(']', '}'));			
+	}
 		
-	}
-	
-	private void createRelatedNodesListFromEdges() {
-		this.related_nodes_list = new ArrayList<int[]>();
-		
-		for (int[] node : this.nodes) {
-			int sum = Arrays.stream(node).sum();
-			int[] arr = new int[sum];
-			int cc = 0;	
-			for (int ii = 0; ii < node.length; ii++) {
-				if(node[ii] == 1) {
-					arr[cc] = ii;
-					cc++;
-				}
-			}
-			this.related_nodes_list.add(arr);
-		}
-	}
-	
-	public int getNodeCount() {
-		// Returns the amount of nodes.
-		return this.nodes_count;
-	}
-	
-	private int getRandomRealtion(double probability) {
-		int newRandom = (int) (Math.random() * 100);
-		if(newRandom < probability) {
-		    return 1;
-		}
-		return 0;
-	}
-	
-	public void print() {
-		// Prints a graph into console.
-		for (int aa = 0; aa < this.nodes.length; aa++) {
-			//for (int bb = 0; bb < this.nodes.length; bb++){if(aa < bb){System.out.print(this.nodes[aa][bb]);}else{System.err.print(this.nodes[aa][bb]);}}System.out.println();
-			if(this.prefix) {
-				System.out.print("[" + this.node_names.get(aa) + "]");
-			}
-			System.out.print(Arrays.toString(this.nodes[aa]));
-			System.out.println();
-		}
-	}
-	
-	public void printAsArray() {
-		// Prints a graph as array into console.
-		
-		String str = "{";
-		for (int aa = 0; aa < this.nodes.length; aa++) {
-			
-			str += Arrays.toString(this.nodes[aa]);
-			if(aa != this.nodes.length - 1) {
-				str += ", ";
-			}
-		}
-		str = str.replace("]","}");
-		str = str.replace("[","{");
-		str += "}";
-		System.out.println(str);
-	}
-
-	public boolean check() {
-		// Graph has an odd amount of nodes.
-		if (this.nodes_count % 2 == 1) {	
-			return true;
-		}
-		
-		this.focused_nodes = this.nodes;
-	
-		for (int ii = 0; ii < this.focused_nodes.length; ii++) {
-			if(Arrays.stream(this.nodes[ii]).sum() == 1) {
-				// Ermittle, an welcher position die 1 ist.
-				// Lösche die Zeilen und Spalten der aktuellen und der 1er Position.
-				
-				// Wiederhole die Prüfung.
-			}	
-		}
-		return true;
-	}
 }
