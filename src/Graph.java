@@ -80,7 +80,18 @@ public class Graph implements Cloneable{
 	@Override
 	public Graph clone() {
 		try {
-			return (Graph) super.clone();
+			Graph new_graph = (Graph) super.clone();
+			
+			ArrayList<Node> new_nodes= new ArrayList<Node>();
+			for (Node item : this.nodes) new_nodes.add(item);
+			ArrayList<Relation>	new_edges = new ArrayList<Relation>();
+			for (Relation item : this.edges) new_edges.add(item);
+			
+			new_graph.nodes = new_nodes;
+			new_graph.edges = new_edges;
+			
+			return new_graph;
+			
 		} catch (CloneNotSupportedException e) {
 			// TODO Automatisch generierter Erfassungsblock
 			e.printStackTrace();
@@ -250,15 +261,15 @@ public class Graph implements Cloneable{
 		}
 		
 		while(true){
-			// Wenn der Graph eine ungrade Anzahl an Ecken hat, kann er trevialer Weise nicht (mehr) paarungsperfekt sein.
-			if(clone.nodes_count % 2 > 0) {
-				return true;
-			}
-			
 			// Wenn der Graph leer ist, war er paarungsperfekt.
 			if (clone.nodes_count == 0) {
 				break;
 			}
+			
+			// Wenn der Graph eine ungrade Anzahl an Ecken hat, kann er trevialer Weise nicht (mehr) paarungsperfekt sein.
+			if(clone.nodes_count % 2 > 0) {
+				return true;
+			}		
 			
 			//Wenn eine der Ecken mehr als ein Blatt hat, kann der Graph nicht paarungsperfekt sein.
 			for (Node node : this.nodes) {
