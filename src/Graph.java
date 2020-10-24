@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Graph{
+public class Graph implements Cloneable{
 	
 	public int nodes_count;
 	public int edges_count;
@@ -10,6 +10,9 @@ public class Graph{
 	public ArrayList<Node>	nodes;		// Liste aller Ecken.
 	public ArrayList<Relation>	edges;	// Liste aller Kanten.
 	
+	public Graph() {
+		
+	}
 	public Graph(int nodes_count_) {
 		this.nodes_count = nodes_count_;
 		this.edges_count = 0;
@@ -73,6 +76,17 @@ public class Graph{
 			}
 		}
 	}	
+		
+	@Override
+	public Graph clone() {
+		try {
+			return (Graph) super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Automatisch generierter Erfassungsblock
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public void createRandomRelations(int relations_count_) {
 		for (int ii = 0; ii < relations_count_; ii++) {
@@ -128,7 +142,48 @@ public class Graph{
 		} 
 		return matrix;
 	}
-
+	
+	public boolean hasLeafs() {
+		for (Node node : this.nodes) {
+			if (node.is_leaf) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public ArrayList<Node> getLeafs() {
+		ArrayList<Node> leafs = new ArrayList<Node>();
+		for (Node node : this.nodes) {
+			if (node.is_leaf) {
+				leafs.add(node);
+			}
+		}
+		return leafs;
+	}
+	
+	public void removeNodeWithNeighbor(Node node_) {
+		Node receiver = node_.neighbors.get(0);
+		
+		// Lösche alle Kanten, die mit dem Blatt oder seinem Nachbarn verbunden sind.
+		for (Relation relation : this.edges) {
+			if (relation.pointer == node_ || relation.receiver == node_ || relation.pointer == receiver || relation.receiver == receiver) {
+				this.edges.remove(relation);
+			}
+		}
+		// Lösche das Blatt.
+		for (Node node : this.nodes) {
+			if(node == node_ || node == receiver) {
+				this.nodes.remove(node);
+			}
+		}	
+	}
+	public void removeNode(Node node_) {
+		this.nodes.remove(node_);
+	}
+	public void removeEdge(Relation edge_) {
+		this.edges.remove(edge_);
+	}
+	
 	public void printNodeList() {
 		String[] strArray = new String[this.nodes_count];
 		
@@ -187,18 +242,43 @@ public class Graph{
 	}
 	
 	public boolean checkGraph() {
-		// Wenn der Graph eine ungrade Anzahl an Ecken hat, kann er trevialer Weise nicht paarungsperfekt sein.
-		if(this.nodes_count % 2 > 0) {
+		Graph clone = (Graph) this.clone();
+		
+		// Wenn der Graph weniger als 2 Ecken hat, ist er trevialer Weise paarungsunperfekt.
+		if (this.nodes_count < 2) {
 			return true;
 		}
-	
-		//Wenn eine der Ecken mehr als ein Blatt hat, kann der Graph nicht paarungsperfekt sein.
-		for (Node node : this.nodes) {
-			if (node.leafs_count() > 1) {
+		
+		while(true){
+			// Wenn der Graph eine ungrade Anzahl an Ecken hat, kann er trevialer Weise nicht (mehr) paarungsperfekt sein.
+			if(clone.nodes_count % 2 > 0) {
 				return true;
 			}
-		}
-		
+			
+			// Wenn der Graph leer ist, war er paarungsperfekt.
+			if (clone.nodes_count == 0) {
+				break;
+			}
+			
+			//Wenn eine der Ecken mehr als ein Blatt hat, kann der Graph nicht paarungsperfekt sein.
+			for (Node node : this.nodes) {
+				if (node.leafs_count() > 1) {
+					return true;
+				}
+			}
+			
+			ArrayList<Node> leafs = clone.getLeafs();
+			
+			// Wenn der Graph keine Blätter mehr hat, ist er paarungsperfekt.
+			if(leafs.size() == 0) {
+				break;
+			}
+			
+			// Lösche alle Blätter mit den verbundenen Ecken und Kanten.
+			for (Node leaf : leafs) {
+				clone.removeNodeWithNeighbor(leaf);
+			}
+		}		
 		return false;
 	}
 }

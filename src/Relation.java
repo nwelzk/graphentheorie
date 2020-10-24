@@ -3,7 +3,6 @@
 public class Relation {
 	
 	public boolean is_edge; 	// Gibt an, ob die Beziehgun eine Ecke ist, oder nicht.
-	public boolean is_marked; 	// Gibt an, ob eine Kante ausgewählt ist.
 	public Node pointer;		// Ausgangsecke der ungerichtete (Nicht-) Kante. 
 	public Node receiver; 		// Ecke, auf die ungerichtete (Nicht-) Kante zeigt.
 	

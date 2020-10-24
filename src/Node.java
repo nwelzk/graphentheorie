@@ -5,8 +5,6 @@ public class Node {
 	
 	public int index; 					// Index der Ecke im Ausgangsgraphen.
 	public int currentIndex; 			// Index der Ecke im veränderten Graphen.
-	public boolean is_paired; 			// Gibt an, ob eine Ecke gepaart ist.
-	public Node partner;				// Gibt die Ecke, an mit der die Ecke gepaart ist.
 	public String name; 				// Name der Ecke;
 	public ArrayList<Node> neighbors; 	// Liste der benachbarten Ecken.
 	public int vertex_degree; 			// Eckengrad.
@@ -18,10 +16,9 @@ public class Node {
 		this.name = identifyName();
 		this.neighbors = new ArrayList<Node>();
 		this.vertex_degree = 0;
-		//this.leafs = new ArrayList<Node>();
-		//this.leafs_count = 0;
 		this.is_leaf = true; 
 	}
+
 	public Relation relateEdge(Node new_neighbor_) {	
 		if(! this.hasNeighbor(new_neighbor_)) {
 			this.neighbors.add(new_neighbor_);
