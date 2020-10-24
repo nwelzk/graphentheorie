@@ -11,11 +11,32 @@ public class _Main {
 		//int[][] ma = {{0, 0, 1, 0, 1, 0}, {0, 0, 1, 0, 0, 0}, {1, 1, 0, 1, 0, 0}, {0, 0, 1, 0, 1, 1}, {1, 0, 0, 1, 0, 0}, {0, 0, 0, 1, 0, 0}};
 		//Graph zufaelligerGraph2 = new Graph(ma);
 	
-		Graph zg = new ConnectedGraph(8, 18);
-		zg.printAdjacencyList();		
+		Graph zg = new ConnectedGraph(9, 18);
+		
+		zg.printNodeNameList();
+		System.out.println();
+		
+		zg.printNodeList();
+		System.out.println();
+		
+		zg.printEdgeList();
+		System.out.println();
+		
+		zg.printAdjacencyList();	
+		System.out.println();
+		
+		zg.printAdjacencyMatrix();
+		System.out.println();
+		System.out.println();
+		
+		zg.printCheckGraph();
 		
 		System.out.println();
-		System.out.println(zg.edges_count);
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		System.out.println();
+		zg.printArray();
 		
 	}
 }

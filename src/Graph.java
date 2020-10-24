@@ -128,6 +128,7 @@ public class Graph{
 		} 
 		return matrix;
 	}
+
 	public void printNodeList() {
 		String[] strArray = new String[this.nodes_count];
 		
@@ -177,5 +178,27 @@ public class Graph{
 		}		
 		System.out.println(Arrays.toString(str).replace('[', '{').replace(']', '}'));			
 	}
+	public void printCheckGraph() {
+		if (this.checkGraph()) {
+			System.out.println("Der Graph ist paarungsunperfekt.");
+		}else {
+			System.out.println("Der Graph ist nicht paarungsunperfekt.");
+		}
+	}
+	
+	public boolean checkGraph() {
+		// Wenn der Graph eine ungrade Anzahl an Ecken hat, kann er trevialer Weise nicht paarungsperfekt sein.
+		if(this.nodes_count % 2 > 0) {
+			return true;
+		}
+	
+		//Wenn eine der Ecken mehr als ein Blatt hat, kann der Graph nicht paarungsperfekt sein.
+		for (Node node : this.nodes) {
+			if (node.leafs_count() > 1) {
+				return true;
+			}
+		}
 		
+		return false;
+	}
 }

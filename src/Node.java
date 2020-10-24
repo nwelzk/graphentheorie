@@ -10,8 +10,6 @@ public class Node {
 	public String name; 				// Name der Ecke;
 	public ArrayList<Node> neighbors; 	// Liste der benachbarten Ecken.
 	public int vertex_degree; 			// Eckengrad.
-	//public ArrayList<Node> leafs; 		// Liste der Blätter.
-	//public int leafs_count; 			// Anzahl der verbundenen Blätter;
 	public boolean is_leaf; 			// Angabe, ob die Ecke ein Blatt ist.
 		
 	public Node(int index_) {
@@ -51,6 +49,15 @@ public class Node {
 			}	
         }
 		return false;
+	}
+	public int leafs_count() {
+		int cnt = 0;
+		for (Node node : this.neighbors) {
+			if (node.is_leaf) {
+				cnt++;
+			}
+		}
+		return cnt;
 	}
 	private String identifyName() {
 		String[] names = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", 
