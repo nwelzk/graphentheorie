@@ -93,7 +93,6 @@ public class Graph implements Cloneable{
 			return new_graph;
 			
 		} catch (CloneNotSupportedException e) {
-			// TODO Automatisch generierter Erfassungsblock
 			e.printStackTrace();
 		}
 		return null;
