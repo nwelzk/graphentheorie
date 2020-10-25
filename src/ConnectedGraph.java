@@ -2,9 +2,14 @@
 public class ConnectedGraph extends Graph {
 
 	
-	public ConnectedGraph(int nodes_count_, int edges_count_) {
+	public ConnectedGraph(int nodes_count_, int min_edges_count_) {
 		super(nodes_count_);
-		this.addRelations(edges_count_);
+		this.addRelations(min_edges_count_);
+		for (Node node : nodes) {
+			if (node.getVertexDegree() == 0) {
+				this.createUndirectedRelation(node, this.getRandomConnectedNode(node.index));
+			}
+		}
 	}
 	
 	

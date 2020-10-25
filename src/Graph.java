@@ -11,9 +11,6 @@ public class Graph implements Cloneable{
 	public ArrayList<Relation>	edges;	// Liste aller Kanten.
 	public Graph clone;
 	
-	public Graph() {
-		
-	}
 	public Graph(int nodes_count_) {
 		this.nodes_count = nodes_count_;
 		this.edges_count = 0;
@@ -135,6 +132,18 @@ public class Graph implements Cloneable{
 			index = r.nextInt(this.nodes_count);
 		}		
 		return this.nodes.get(index);
+	}
+	protected Node getRandomConnectedNode(int exclusion_) {
+		Random r = new Random();
+		Node focused_node = null;
+		int index = exclusion_;
+		while(index == exclusion_) {
+			focused_node = this.nodes.get(r.nextInt(this.nodes_count));
+			if (focused_node.getVertexDegree() > 0) {
+				index = focused_node.index;
+			}
+		}		
+		return focused_node;
 	}
 	protected int[][] createAdjacencyMatrix() {
 		int[][] matrix = new int[this.nodes_count][this.nodes_count];
