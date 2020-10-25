@@ -187,7 +187,7 @@ public class Graph implements Cloneable{
 		// Lösche alle Kanten, die mit dem Blatt oder seinem Nachbarn verbunden sind.
 		for (Relation relation : this.edges) {
 			if (relation.pointer == node_ || relation.receiver == node_ || relation.pointer == receiver || relation.receiver == receiver) {
-				this.removeEdge(relation);
+					this.removeEdge(relation);
 			}
 		}
 		// Lösche das Blatt und seine Nachbarn.
