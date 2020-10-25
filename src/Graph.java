@@ -9,6 +9,7 @@ public class Graph implements Cloneable{
 	
 	public ArrayList<Node>	nodes;		// Liste aller Ecken.
 	public ArrayList<Relation>	edges;	// Liste aller Kanten.
+	public Graph clone;
 	
 	public Graph() {
 		
@@ -155,7 +156,7 @@ public class Graph implements Cloneable{
 	
 	public boolean hasLeafs() {
 		for (Node node : this.nodes) {
-			if (node.is_leaf) {
+			if (node.isLeaf()) {
 				return true;
 			}
 		}
@@ -164,7 +165,7 @@ public class Graph implements Cloneable{
 	public ArrayList<Node> getLeafs() {
 		ArrayList<Node> leafs = new ArrayList<Node>();
 		for (Node node : this.nodes) {
-			if (node.is_leaf) {
+			if (node.isLeaf()) {
 				leafs.add(node);
 			}
 		}
@@ -177,13 +178,14 @@ public class Graph implements Cloneable{
 		// Lösche alle Kanten, die mit dem Blatt oder seinem Nachbarn verbunden sind.
 		for (Relation relation : this.edges) {
 			if (relation.pointer == node_ || relation.receiver == node_ || relation.pointer == receiver || relation.receiver == receiver) {
-				this.edges.remove(relation);
+				this.removeEdge(relation);
 			}
 		}
-		// Lösche das Blatt.
+		// Lösche das Blatt und seine Nachbarn.
 		for (Node node : this.nodes) {
 			if(node == node_ || node == receiver) {
-				this.nodes.remove(node);
+				this.removeNode(node);
+				node.kill();
 			}
 		}	
 	}
@@ -253,6 +255,7 @@ public class Graph implements Cloneable{
 	
 	public boolean checkGraph() {
 		Graph clone = (Graph) this.clone();
+		this.clone = clone;
 		
 		// Wenn der Graph weniger als 2 Ecken hat, ist er trevialer Weise paarungsunperfekt.
 		if (this.nodes_count < 2) {
@@ -261,23 +264,23 @@ public class Graph implements Cloneable{
 		
 		while(true){
 			// Wenn der Graph leer ist, war er paarungsperfekt.
-			if (clone.nodes_count == 0) {
+			if (this.clone.nodes_count == 0) {
 				break;
 			}
 			
 			// Wenn der Graph eine ungrade Anzahl an Ecken hat, kann er trevialer Weise nicht (mehr) paarungsperfekt sein.
-			if(clone.nodes_count % 2 > 0) {
+			if(this.clone.nodes_count % 2 > 0) {
 				return true;
 			}		
 			
 			//Wenn eine der Ecken mehr als ein Blatt hat, kann der Graph nicht paarungsperfekt sein.
-			for (Node node : this.nodes) {
+			for (Node node : this.clone.nodes) {
 				if (node.leafs_count() > 1) {
 					return true;
 				}
 			}
 			
-			ArrayList<Node> leafs = clone.getLeafs();
+			ArrayList<Node> leafs = this.clone.getLeafs();
 			
 			// Wenn der Graph keine Blätter mehr hat, ist er paarungsperfekt.
 			if(leafs.size() == 0) {
@@ -286,7 +289,7 @@ public class Graph implements Cloneable{
 			
 			// Lösche alle Blätter mit den verbundenen Ecken und Kanten.
 			for (Node leaf : leafs) {
-				clone.removeNodeWithNeighbor(leaf);
+				this.clone.removeNodeWithNeighbor(leaf);
 			}
 		}		
 		return false;

@@ -6,25 +6,25 @@ public class Node {
 	public int index; 					// Index der Ecke im Ausgangsgraphen.
 	public int currentIndex; 			// Index der Ecke im veränderten Graphen.
 	public String name; 				// Name der Ecke;
-	public ArrayList<Node> neighbors; 	// Liste der benachbarten Ecken.
-	public int vertex_degree; 			// Eckengrad.
-	public boolean is_leaf; 			// Angabe, ob die Ecke ein Blatt ist.
+	public ArrayList<Node> neighbors; 	// Liste der benachbarten Ecken.	
 		
 	public Node(int index_) {
 		this.index = index_;
 		this.currentIndex = index_;
 		this.name = identifyName();
 		this.neighbors = new ArrayList<Node>();
-		this.vertex_degree = 0;
-		this.is_leaf = true; 
 	}
-
+	
+	public boolean isLeaf() {
+		return (this.getVertexDegree() > 1)? true : false; // Angabe, ob die Ecke ein Blatt ist.
+	}
+	public int getVertexDegree() { 
+		return this.neighbors.size(); // Eckengrad.
+	}
 	public Relation relateEdge(Node new_neighbor_) {	
 		if(! this.hasNeighbor(new_neighbor_)) {
 			this.neighbors.add(new_neighbor_);
-			Relation edge = new Relation(this, new_neighbor_, true);
-			this.vertex_degree++;
-			this.is_leaf = (this.vertex_degree > 1) ? false : true;		
+			Relation edge = new Relation(this, new_neighbor_, true);	
 			return edge;
 		}
 		return null;
@@ -47,10 +47,21 @@ public class Node {
         }
 		return false;
 	}
+	public void removeNeighbor(Node neighbor_) {
+		if (this.hasNeighbor(neighbor_)) {
+			this.neighbors.remove(neighbor_);
+		}
+	}
+	public void kill() {
+		for (Node node : neighbors) {
+			node.removeNeighbor(this);
+			this.neighbors.remove(node);
+		}
+	}
 	public int leafs_count() {
 		int cnt = 0;
 		for (Node node : this.neighbors) {
-			if (node.is_leaf) {
+			if (node.isLeaf()) {
 				cnt++;
 			}
 		}
@@ -76,5 +87,6 @@ public class Node {
 			arr[ii] = this.neighbors.get(ii).index;
 		}
 		return arr;
-	}	
+	}
+	
 }
