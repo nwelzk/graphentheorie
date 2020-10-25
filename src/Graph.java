@@ -182,21 +182,37 @@ public class Graph implements Cloneable{
 	}
 	
 	public void removeNodeWithNeighbor(Node node_) {
-		Node receiver = node_.neighbors.get(0);
+		ArrayList<Relation> detected_relations = new ArrayList<Relation>();
+		ArrayList<Node> detected_nodes = new ArrayList<Node>();
 		
-		// Lösche alle Kanten, die mit dem Blatt oder seinem Nachbarn verbunden sind.
-		for (Relation relation : this.edges) {
-			if (relation.pointer == node_ || relation.receiver == node_ || relation.pointer == receiver || relation.receiver == receiver) {
-					this.removeEdge(relation);
+		if (node_.neighbors != null) {
+			Node receiver = node_.neighbors.get(0);
+			
+			// Lösche alle Kanten, die mit dem Blatt oder seinem Nachbarn verbunden sind.
+			for (Relation relation : this.edges) {
+				if (relation.pointer == node_ || relation.receiver == node_ || relation.pointer == receiver || relation.receiver == receiver) {
+						detected_relations.add(relation);				
+				}
 			}
-		}
-		// Lösche das Blatt und seine Nachbarn.
-		for (Node node : this.nodes) {
-			if(node == node_ || node == receiver) {
+			
+			for (Node node : this.nodes) {
+				if(node == node_ || node == receiver) {
+					detected_nodes.add(node);		
+				}				
+			}
+			for (Relation relation : detected_relations) {
+				this.removeEdge(relation);
+			}
+			
+			// Lösche das Blatt und seine Nachbarn.
+				
+			for (Node node : detected_nodes) {
 				this.removeNode(node);
 				node.kill();
 			}
-		}	
+		}else {
+			this.nodes.remove(node_);
+		}		
 	}
 	public void removeNode(Node node_) {
 		this.nodes.remove(node_);

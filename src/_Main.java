@@ -15,7 +15,7 @@ public class _Main {
 		System.out.println();
 
 		//Erstellt n zufällige Graphen und gibt sie aus, wenn sie paarungsunperfekt sind.
-		for (int ii = 0; ii < 10; ii++) {
+		for (int ii = 0; ii < 1000; ii++) {
 			Graph zg = new ConnectedGraph(8, 5);
 			
 			if (zg.checkGraph()) {

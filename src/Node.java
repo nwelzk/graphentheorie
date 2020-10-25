@@ -55,8 +55,8 @@ public class Node {
 	public void kill() {
 		for (Node node : neighbors) {
 			node.removeNeighbor(this);
-			this.neighbors.remove(node);
 		}
+		this.neighbors = null;
 	}
 	public int leafs_count() {
 		int cnt = 0;
