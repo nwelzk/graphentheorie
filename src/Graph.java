@@ -69,8 +69,8 @@ public class Graph implements Cloneable{
 		return new Graph(this.createAdjacencyMatrix());
 	}
 	
-	public void createRandomRelations(int relations_count_) {
-		for (int ii = 0; ii < relations_count_; ii++) {
+	public void createRandomRelations(int amount_) {
+		for (int ii = 0; ii < amount_; ii++) {
 			Node pointer = this.getRandomNode();
 			Node receiver = this.getRandomNode(pointer.index);
 			this.createUndirectedRelation(pointer, receiver);
@@ -214,13 +214,25 @@ public class Graph implements Cloneable{
 		node.kill();
 		this.nodes.remove(node);
 	}
-//	public void removeNode(Node node_) {
-//		this.nodes.remove(node_);
-//	}
-//	public void removeEdge(Relation edge_) {
-//		this.edges.remove(edge_);
-//	}
-	
+	public ArrayList<Integer> removeRandomNodes(int amount_) {
+		Random r = new Random();
+		ArrayList<Integer> selected_nodes = new ArrayList<Integer>();
+		
+		for (int ii = 0; ii < amount_; ii++) {
+			while(selected_nodes.size() < this.nodes.size()) {
+				int index = r.nextInt(this.nodes.size());
+				if(! selected_nodes.contains(index)) {
+					selected_nodes.add(index);
+					break;
+				}
+			}
+		}
+		for (Integer index : selected_nodes) {
+			this.removeNode(index);
+		}
+		return selected_nodes;
+	}
+
 	public void printNodeList() {
 		String[] strArray = new String[this.nodes.size()];
 		
