@@ -4,28 +4,22 @@ import java.util.Random;
 
 public class Graph implements Cloneable{
 	
-	public int nodes_count;
-	public int edges_count;
-	
 	public ArrayList<Node>	nodes;		// Liste aller Ecken.
 	public ArrayList<Relation>	edges;	// Liste aller Kanten.
 	public Graph clone;
 	
 	public Graph(int nodes_count_) {
-		this.nodes_count = nodes_count_;
-		this.edges_count = 0;
 		this.nodes = new ArrayList<Node>();
 		this.edges = new ArrayList<Relation>();
-		for (int ii = 0; ii < this.nodes_count; ii++) {
+		for (int ii = 0; ii < nodes_count_; ii++) {
 			nodes.add(new Node(ii));
 		}
 	}
 	public Graph(int nodes_count_, int propability_) {
 		Random r = new Random();
-		this.nodes_count = nodes_count_;
 		this.nodes = new ArrayList<Node>();
 		this.edges = new ArrayList<Relation>();
-		for (int ii = 0; ii < this.nodes_count; ii++) {
+		for (int ii = 0; ii < nodes_count_; ii++) {
 			nodes.add(new Node(ii));
 		}
 		for (Node pointer : nodes) {
@@ -41,15 +35,13 @@ public class Graph implements Cloneable{
 		}
 	}
 	public Graph(int[][] adjacency_matrix_) {
-		this.nodes_count = adjacency_matrix_.length;
-		this.edges_count = 0;
 		this.nodes = new ArrayList<Node>();
 		this.edges = new ArrayList<Relation>();
-		for (int vv = 0; vv < this.nodes_count; vv++) {
+		for (int vv = 0; vv < adjacency_matrix_.length; vv++) {
 			nodes.add(new Node(vv));
 		}
-		for (int jj = 0; jj < this.nodes_count; jj++) {
-			for (int ii = 0; ii < this.nodes_count; ii++) {
+		for (int jj = 0; jj < adjacency_matrix_.length; jj++) {
+			for (int ii = 0; ii < adjacency_matrix_.length; ii++) {
 				if(adjacency_matrix_[jj][ii] == 1) {
 					this.createDirectedRelation(this.nodes.get(ii), this.nodes.get(jj));
 				}
@@ -63,10 +55,7 @@ public class Graph implements Cloneable{
 		String[] parsedString = adjacency_list_.replaceAll("]", "").split(", \\[");
 		for (int vv = 0; vv < parsedString.length; vv++) {
 			nodes.add(new Node(vv));
-		}
-		this.nodes_count = parsedString.length;
-		this.edges_count = 0;
-		
+		}		
 		for (int ii = 0; ii < parsedString.length; ii++) {
 			String[] values = parsedString[ii].replaceAll("\\[", "").split(", ");
 			for (String value : values) {
@@ -74,26 +63,10 @@ public class Graph implements Cloneable{
 			}
 		}
 	}	
-		
+	
 	@Override
-	public Graph clone() {
-		try {
-			Graph new_graph = (Graph) super.clone();
-			
-			ArrayList<Node> new_nodes= new ArrayList<Node>();
-			for (Node item : this.nodes) new_nodes.add(item);
-			ArrayList<Relation>	new_edges = new ArrayList<Relation>();
-			for (Relation item : this.edges) new_edges.add(item);
-			
-			new_graph.nodes = new_nodes;
-			new_graph.edges = new_edges;
-			
-			return new_graph;
-			
-		} catch (CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
-		return null;
+	public Graph clone() {	
+		return new Graph(this.createAdjacencyMatrix());
 	}
 	
 	public void createRandomRelations(int relations_count_) {
@@ -112,24 +85,22 @@ public class Graph implements Cloneable{
 		if(r2 != null) {
 			this.edges.add(r2);
 		}
-		this.edges_count = this.edges.size();
 	}
 	protected void createDirectedRelation(Node node_left_, Node node_right_) {
 		Relation r = node_left_.relateEdge(node_right_);
 		if(r != null) { 
 			this.edges.add(r);
 		}		
-		this.edges_count = this.edges.size();
 	}	
 	protected Node getRandomNode() {
 		Random r = new Random();
-		return this.nodes.get(r.nextInt(this.nodes_count));
+		return this.nodes.get(r.nextInt(this.nodes.size()));
 	}
 	protected Node getRandomNode(int exclusion_) {
 		Random r = new Random();
 		int index = exclusion_;
 		while(index == exclusion_) {
-			index = r.nextInt(this.nodes_count);
+			index = r.nextInt(this.nodes.size());
 		}		
 		return this.nodes.get(index);
 	}
@@ -138,7 +109,7 @@ public class Graph implements Cloneable{
 		Node focused_node = null;
 		int index = exclusion_;
 		while(index == exclusion_) {
-			focused_node = this.nodes.get(r.nextInt(this.nodes_count));
+			focused_node = this.nodes.get(r.nextInt(this.nodes.size()));
 			if (focused_node.getVertexDegree() > 0) {
 				index = focused_node.index;
 			}
@@ -146,12 +117,12 @@ public class Graph implements Cloneable{
 		return focused_node;
 	}
 	protected int[][] createAdjacencyMatrix() {
-		int[][] matrix = new int[this.nodes_count][this.nodes_count];
+		int[][] matrix = new int[this.nodes.size()][this.nodes.size()];
 		
-		for (int jj = 0; jj < this.nodes_count; jj++) {
-			int[] arr = new int[this.nodes_count];
+		for (int jj = 0; jj < this.nodes.size(); jj++) {
+			int[] arr = new int[this.nodes.size()];
 			Node currentNode = this.nodes.get(jj);
-			for (int ii = 0; ii < this.nodes_count; ii++) {
+			for (int ii = 0; ii < this.nodes.size(); ii++) {
 				if(currentNode.hasNeighbor(ii)) {
 					arr[ii] = 1;
 				}else {
@@ -181,7 +152,7 @@ public class Graph implements Cloneable{
 		return leafs;
 	}
 	
-	public void removeNodeWithNeighbor(Node node_) {
+	public void removeNodeWithNeighbors(Node node_) {
 		ArrayList<Relation> detected_relations = new ArrayList<Relation>();
 		ArrayList<Node> detected_nodes = new ArrayList<Node>();
 		
@@ -201,13 +172,13 @@ public class Graph implements Cloneable{
 				}				
 			}
 			for (Relation relation : detected_relations) {
-				this.removeEdge(relation);
+				this.edges.remove(relation);
 			}
 			
 			// Lösche das Blatt und seine Nachbarn.
 				
 			for (Node node : detected_nodes) {
-				this.removeNode(node);
+				this.nodes.remove(node);
 				node.kill();
 			}
 		}else {
@@ -215,42 +186,71 @@ public class Graph implements Cloneable{
 		}		
 	}
 	public void removeNode(Node node_) {
+		ArrayList<Relation> detected_relations = new ArrayList<Relation>();
+		for (Relation relation : this.edges) {
+			if (relation.pointer == node_ || relation.receiver == node_) {
+					detected_relations.add(relation);				
+			}
+		}
+		
+		for (Relation relation : detected_relations) {
+			this.edges.remove(relation);
+		}
+		node_.kill();
 		this.nodes.remove(node_);
 	}
-	public void removeEdge(Relation edge_) {
-		this.edges.remove(edge_);
+	public void removeNode(int index_) {
+		Node node = this.nodes.get(index_);
+		ArrayList<Relation> detected_relations = new ArrayList<Relation>();
+		for (Relation relation : this.edges) {
+			if (relation.pointer == node || relation.receiver == node) {
+					detected_relations.add(relation);				
+			}
+		}
+		
+		for (Relation relation : detected_relations) {
+			this.edges.remove(relation);
+		}
+		node.kill();
+		this.nodes.remove(node);
 	}
+//	public void removeNode(Node node_) {
+//		this.nodes.remove(node_);
+//	}
+//	public void removeEdge(Relation edge_) {
+//		this.edges.remove(edge_);
+//	}
 	
 	public void printNodeList() {
-		String[] strArray = new String[this.nodes_count];
+		String[] strArray = new String[this.nodes.size()];
 		
-		for (int ii = 0; ii < this.nodes_count; ii++) {			
+		for (int ii = 0; ii < this.nodes.size(); ii++) {			
 			strArray[ii] = String.valueOf(this.nodes.get(ii).index);
 		}   
 		System.out.println(Arrays.toString(strArray));
 	}
 	public void printNodeNameList() {
-		String[] strArray = new String[this.nodes_count];
+		String[] strArray = new String[this.nodes.size()];
 		
-		for (int ii = 0; ii < this.nodes_count; ii++) {			
+		for (int ii = 0; ii < this.nodes.size(); ii++) {			
 			strArray[ii] = this.nodes.get(ii).name;
 		}   
 		System.out.println(Arrays.toString(strArray));
 	}
 	public void printEdgeList() {
-		String[] strArray = new String[this.edges_count];
+		String[] strArray = new String[this.edges.size()];
 		
-		for (int ii = 0; ii < this.edges_count; ii++) {			
+		for (int ii = 0; ii < this.edges.size(); ii++) {			
 			strArray[ii] = Arrays.toString(this.edges.get(ii).getIndexArray());
 		}   
 		Arrays.sort(strArray);
 		System.out.println(Arrays.toString(strArray));
 	}
 	public void printAdjacencyList() {
-		String[] strArray = new String[this.nodes_count];
+		String[] strArray = new String[this.nodes.size()];
 		
-		for (int ii = 0; ii < this.nodes_count; ii++) {	
-			int[] arr = this.nodes.get(ii).getNeighborIndexArray();
+		for (int ii = 0; ii < this.nodes.size(); ii++) {	
+			int[] arr = this.nodes.get(ii).getNeighborIndexArray(); ///
 			Arrays.sort(arr);
 			strArray[ii] = Arrays.toString(arr);
 		}   
@@ -264,37 +264,41 @@ public class Graph implements Cloneable{
 	}
 	public void printArray() {
 		int[][] matrix = this.createAdjacencyMatrix();
-		String[] str = new String[this.nodes_count];
-		for (int ii = 0; ii < this.nodes_count; ii++) {
+		String[] str = new String[this.nodes.size()];
+		for (int ii = 0; ii < this.nodes.size(); ii++) {
 			str[ii] = Arrays.toString(matrix[ii]);
 		}		
 		System.out.println(Arrays.toString(str).replace('[', '{').replace(']', '}'));			
 	}
-	public void printCheckGraph() {
-		if (this.checkGraph()) {
+	public void printCheckGraph(boolean print_details_) {
+		if (this.checkGraph(print_details_)) {
 			System.out.println("Der Graph ist paarungsunperfekt.");
 		}else {
 			System.out.println("Der Graph ist nicht paarungsunperfekt.");
 		}
 	}
 	
-	public boolean checkGraph() {
+	public boolean checkGraph(boolean print_details_) {
 		Graph clone = (Graph) this.clone();
 		this.clone = clone;
 		
 		// Wenn der Graph weniger als 2 Ecken hat, ist er trevialer Weise paarungsunperfekt.
-		if (this.nodes_count < 2) {
+		if (this.nodes.size() < 2) {
 			return true;
 		}
 		
 		while(true){
+			if(print_details_) {
+				this.clone.printAdjacencyList();
+			}
+			
 			// Wenn der Graph leer ist, war er paarungsperfekt.
-			if (this.clone.nodes_count == 0) {
+			if (this.clone.nodes.size() == 0) {
 				break;
 			}
 			
 			// Wenn der Graph eine ungrade Anzahl an Ecken hat, kann er trevialer Weise nicht (mehr) paarungsperfekt sein.
-			if(this.clone.nodes_count % 2 > 0) {
+			if(this.clone.nodes.size() % 2 > 0) {
 				return true;
 			}		
 			
@@ -312,9 +316,9 @@ public class Graph implements Cloneable{
 				break;
 			}
 			
-			// Lösche alle Blätter mit den verbundenen Ecken und Kanten.
+			// Lösche alle Blätter und ihre benachbarten Ecken, sowie alle angrenzenden Kanten.
 			for (Node leaf : leafs) {
-				this.clone.removeNodeWithNeighbor(leaf);
+				this.clone.removeNodeWithNeighbors(leaf);
 			}
 		}		
 		return false;

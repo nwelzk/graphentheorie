@@ -16,7 +16,7 @@ public class Node {
 	}
 	
 	public boolean isLeaf() {
-		return (this.getVertexDegree() > 1)? true : false; // Angabe, ob die Ecke ein Blatt ist.
+		return (this.getVertexDegree() > 1)? false : true; // Angabe, ob die Ecke ein Blatt ist.
 	}
 	public int getVertexDegree() { 
 		return this.neighbors.size(); // Eckengrad.
@@ -88,5 +88,4 @@ public class Node {
 		}
 		return arr;
 	}
-	
 }
