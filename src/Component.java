@@ -12,6 +12,8 @@ public class Component extends Graph {
 		this.expand(start_node_);
 	}
 	
+	
+	
 	public void expand(Node start_node_) {	
 		if (! this.nodes.contains(start_node_)) { 
 			this.nodes.add(start_node_);
