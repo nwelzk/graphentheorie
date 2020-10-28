@@ -13,11 +13,15 @@ public class _Main {
 		s();
 		g.printAdjacencyList();
 		s();
-		ArrayList<Integer> removed_indexes = g.removeRandomNodes(2);
-		
-		for (Integer index : removed_indexes) {
-			System.out.println(index);
-		}
+		g.removeNode(3);
+		g.removeNode(4);
+//		ArrayList<Integer> removed_indexes = g.removeRandomNodes(2);
+//		
+//		System.out.println("Entfernt: ");
+//		for (Integer index : removed_indexes) {
+//			System.out.println(index);
+//		}
+		s();
 		
 		g.printNodeList();
 		g.printNodeNameList();

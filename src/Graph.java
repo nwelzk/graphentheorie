@@ -2,12 +2,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Graph implements Cloneable{
+public class Graph implements Cloneable {
 	
 	public ArrayList<Node>	nodes;		// Liste aller Ecken.
 	public ArrayList<Relation>	edges;	// Liste aller Kanten.
 	public Graph clone;
 	
+	public ArrayList<Component>	components;
+	
+	public Graph() {
+		this.nodes = new ArrayList<Node>();
+		this.edges = new ArrayList<Relation>();
+	}
 	public Graph(int nodes_count_) {
 		this.nodes = new ArrayList<Node>();
 		this.edges = new ArrayList<Relation>();
@@ -200,19 +206,26 @@ public class Graph implements Cloneable{
 		this.nodes.remove(node_);
 	}
 	public void removeNode(int index_) {
-		Node node = this.nodes.get(index_);
-		ArrayList<Relation> detected_relations = new ArrayList<Relation>();
-		for (Relation relation : this.edges) {
-			if (relation.pointer == node || relation.receiver == node) {
-					detected_relations.add(relation);				
+		Node node = null;
+		for (Node nn : this.nodes) {
+			if (nn.index == index_) {
+				node = nn;
 			}
 		}
-		
-		for (Relation relation : detected_relations) {
-			this.edges.remove(relation);
+		if (node != null) {
+			ArrayList<Relation> detected_relations = new ArrayList<Relation>();
+			for (Relation relation : this.edges) {
+				if (relation.pointer == node || relation.receiver == node) {
+						detected_relations.add(relation);				
+				}
+			}
+			
+			for (Relation relation : detected_relations) {
+				this.edges.remove(relation);
+			}
+			node.kill();
+			this.nodes.remove(node);
 		}
-		node.kill();
-		this.nodes.remove(node);
 	}
 	public ArrayList<Integer> removeRandomNodes(int amount_) {
 		Random r = new Random();
@@ -233,6 +246,21 @@ public class Graph implements Cloneable{
 		return selected_nodes;
 	}
 
+	public void setComponents() {
+		this.components = new ArrayList<Component>();
+		ArrayList<Node> nodes_copy = new ArrayList<Node>();
+		nodes_copy.addAll(this.nodes);
+		int counter = 0;
+		
+		while(nodes_copy.size() > 0) {
+			Component component = new Component(counter, nodes_copy.get(0));
+			this.components.add(component);
+			nodes_copy.removeAll(component.nodes);
+			counter++;
+		}
+		
+	}
+	
 	public void printNodeList() {
 		String[] strArray = new String[this.nodes.size()];
 		
