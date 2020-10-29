@@ -258,7 +258,6 @@ public class Graph implements Cloneable {
 			nodes_copy.removeAll(component.nodes);
 			counter++;
 		}
-		
 	}
 	
 	public void printNodeList() {

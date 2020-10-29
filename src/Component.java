@@ -3,8 +3,6 @@ import java.util.ArrayList;
 public class Component extends Graph {
 
 	public int id;
-	public ArrayList<Node>	nodes;		// Liste aller Ecken der Komponente.
-	public ArrayList<Relation>	edges;	// Liste aller Kanten.
 	
 	public Component(int id_, Node start_node_) {
 		super();		
@@ -12,10 +10,8 @@ public class Component extends Graph {
 		this.expand(start_node_);
 	}
 	
-	
-	
 	public void expand(Node start_node_) {	
-		if (! this.nodes.contains(start_node_)) { 
+		if (this.nodes.size() > 0 && ! this.nodes.contains(start_node_)) { 
 			this.nodes.add(start_node_);
 			ArrayList<Node>	neighbors = start_node_.neighbors;
 			for (Node neighbor : neighbors) {
