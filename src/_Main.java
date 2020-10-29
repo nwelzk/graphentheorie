@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 public class _Main {
 
@@ -19,6 +18,7 @@ public class _Main {
 		
 		for (Component c : g.components) {
 			if(c.nodes.size() % 2 == 1) {
+				System.out.println("Oh yeah!");
 				// Ungrade anzahl an knoten
 			}
 		}
