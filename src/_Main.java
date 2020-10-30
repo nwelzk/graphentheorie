@@ -47,7 +47,7 @@ public class _Main {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 		for (int ii = 0; ii < 1000; ii++) {
 			// Anzahl der Ecken und Kanten darf nicht 0 sein.
-			// Die Anzahl der Kanten drf nicht größer sein, als die Anzahl der max. möglichen Kanten.
+			// Die Anzahl der Kanten drf nicht grï¿½ï¿½er sein, als die Anzahl der max. mï¿½glichen Kanten.
 			do {
 				n = r.nextInt(8);
 				v = r.nextInt(7);
@@ -77,7 +77,8 @@ public class _Main {
 		for (int ii = 0; ii < 5; ii++) {
 			do {
 				// Anzahl der Ecken und Kanten darf nicht 0 sein.
-				// Die Anzahl der Kanten drf nicht größer sein, als die Anzahl der max. möglichen Kanten.
+				// Die Anzahl der Kanten drf nicht grï¿½ï¿½er sein, als die Anzahl der max. mï¿½glichen Kanten.
+				// Die Anzahl der Kanten drf nicht grï¿½ï¿½er sein, als die Anzahl der max. mï¿½glichen Kanten.
 				do {
 					n = r.nextInt(12);
 					s = r.nextInt(n);
