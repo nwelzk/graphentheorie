@@ -18,7 +18,7 @@ public class Graph implements Cloneable {
 		this.nodes = new ArrayList<Node>();
 		this.edges = new ArrayList<Relation>();
 		for (int ii = 0; ii < nodes_count_; ii++) {
-			nodes.add(new Node(ii));
+			this.nodes.add(new Node(ii));
 		}
 	}
 	public Graph(int nodes_count_, int propability_) {
@@ -100,12 +100,18 @@ public class Graph implements Cloneable {
 	}	
 	protected Node getRandomNode() {
 		Random r = new Random();
+		if (this.nodes.isEmpty()) {
+			return null;
+		}
 		return this.nodes.get(r.nextInt(this.nodes.size()));
 	}
 	protected Node getRandomNode(int exclusion_) {
 		Random r = new Random();
 		int index = exclusion_;
-		while(index == exclusion_) {
+		if (this.nodes.isEmpty()) {
+			return null;
+		}
+		while(index == exclusion_) {	
 			index = r.nextInt(this.nodes.size());
 		}		
 		return this.nodes.get(index);
@@ -113,6 +119,9 @@ public class Graph implements Cloneable {
 	protected Node getRandomConnectedNode(int exclusion_) {
 		Random r = new Random();
 		Node focused_node = null;
+		if (this.nodes.isEmpty()) {
+			return null;
+		}
 		int index = exclusion_;
 		while(index == exclusion_) {
 			focused_node = this.nodes.get(r.nextInt(this.nodes.size()));
@@ -162,7 +171,7 @@ public class Graph implements Cloneable {
 		ArrayList<Relation> detected_relations = new ArrayList<Relation>();
 		ArrayList<Node> detected_nodes = new ArrayList<Node>();
 		
-		if (node_.neighbors != null) {
+		if (node_.neighbors != null && node_.neighbors.size() > 0) {
 			Node receiver = node_.neighbors.get(0);
 			
 			// Lösche alle Kanten, die mit dem Blatt oder seinem Nachbarn verbunden sind.
@@ -177,14 +186,12 @@ public class Graph implements Cloneable {
 					detected_nodes.add(node);		
 				}				
 			}
-			for (Relation relation : detected_relations) {
-				this.edges.remove(relation);
-			}
 			
-			// Lösche das Blatt und seine Nachbarn.
-				
+			this.edges.removeAll(detected_relations);
+			this.nodes.removeAll(detected_nodes);
+			
+			// Lösche das Blatt und seine Nachbarn.	
 			for (Node node : detected_nodes) {
-				this.nodes.remove(node);
 				node.kill();
 			}
 		}else {
@@ -233,6 +240,9 @@ public class Graph implements Cloneable {
 		
 		for (int ii = 0; ii < amount_; ii++) {
 			while(selected_nodes.size() < this.nodes.size()) {
+				if (this.nodes.isEmpty()) {
+					return selected_nodes;
+				}
 				int index = r.nextInt(this.nodes.size());
 				if(! selected_nodes.contains(index)) {
 					selected_nodes.add(index);
@@ -260,32 +270,32 @@ public class Graph implements Cloneable {
 		}
 	}
 	
-	public void printNodeList() {
+	public String getNodeList() {
 		String[] strArray = new String[this.nodes.size()];
 		
 		for (int ii = 0; ii < this.nodes.size(); ii++) {			
 			strArray[ii] = String.valueOf(this.nodes.get(ii).index);
 		}   
-		System.out.println(Arrays.toString(strArray));
+		return Arrays.toString(strArray);
 	}
-	public void printNodeNameList() {
+	public String getNodeNameList() {
 		String[] strArray = new String[this.nodes.size()];
 		
 		for (int ii = 0; ii < this.nodes.size(); ii++) {			
 			strArray[ii] = this.nodes.get(ii).name;
 		}   
-		System.out.println(Arrays.toString(strArray));
+		return Arrays.toString(strArray);
 	}
-	public void printEdgeList() {
+	public String getEdgeList() {
 		String[] strArray = new String[this.edges.size()];
 		
 		for (int ii = 0; ii < this.edges.size(); ii++) {			
 			strArray[ii] = Arrays.toString(this.edges.get(ii).getIndexArray());
 		}   
 		Arrays.sort(strArray);
-		System.out.println(Arrays.toString(strArray));
+		return Arrays.toString(strArray);
 	}
-	public void printAdjacencyList() {
+	public String getAdjacencyList() {
 		String[] strArray = new String[this.nodes.size()];
 		
 		for (int ii = 0; ii < this.nodes.size(); ii++) {	
@@ -293,7 +303,7 @@ public class Graph implements Cloneable {
 			Arrays.sort(arr);
 			strArray[ii] = Arrays.toString(arr);
 		}   
-		System.out.println(Arrays.toString(strArray));
+		return Arrays.toString(strArray);
 	}
 	public void printAdjacencyMatrix() {
 		int[][] matrix = this.createAdjacencyMatrix(); 
@@ -301,20 +311,19 @@ public class Graph implements Cloneable {
 			System.out.println(Arrays.toString(arr));
 		}
 	}
-	public void printArray() {
+	public String getArray() {
 		int[][] matrix = this.createAdjacencyMatrix();
 		String[] str = new String[this.nodes.size()];
 		for (int ii = 0; ii < this.nodes.size(); ii++) {
 			str[ii] = Arrays.toString(matrix[ii]);
 		}		
-		System.out.println(Arrays.toString(str).replace('[', '{').replace(']', '}'));			
+		return Arrays.toString(str).replace('[', '{').replace(']', '}');			
 	}
-	public void printCheckGraph(boolean print_details_) {
+	public String stringCheckGraph(boolean print_details_) {
 		if (this.checkGraph(print_details_)) {
-			System.out.println("Der Graph ist paarungsunperfekt.");
-		}else {
-			System.out.println("Der Graph ist nicht paarungsunperfekt.");
+			return "Der Graph ist paarungsunperfekt.";
 		}
+		return "Der Graph ist nicht paarungsunperfekt.";
 	}
 	
 	public boolean checkGraph(boolean print_details_) {
@@ -328,7 +337,7 @@ public class Graph implements Cloneable {
 		
 		while(true){
 			if(print_details_) {
-				this.clone.printAdjacencyList();
+				System.out.println(this.clone.getAdjacencyList());
 			}
 			
 			// Wenn der Graph leer ist, war er paarungsperfekt.
@@ -354,7 +363,7 @@ public class Graph implements Cloneable {
 			if(leafs.size() == 0) {
 				break;
 			}
-			
+
 			// Lösche alle Blätter und ihre benachbarten Ecken, sowie alle angrenzenden Kanten.
 			for (Node leaf : leafs) {
 				this.clone.removeNodeWithNeighbors(leaf);

@@ -4,13 +4,11 @@ import java.util.Iterator;
 public class Node {
 	
 	public int index; 					// Index der Ecke im Ausgangsgraphen.
-	public int currentIndex; 			// Index der Ecke im veränderten Graphen.
 	public String name; 				// Name der Ecke;
 	public ArrayList<Node> neighbors; 	// Liste der benachbarten Ecken.	
 		
 	public Node(int index_) {
 		this.index = index_;
-		this.currentIndex = index_;
 		this.name = identifyName();
 		this.neighbors = new ArrayList<Node>();
 	}
