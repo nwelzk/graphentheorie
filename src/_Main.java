@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 import java.io.*;
 
@@ -5,30 +7,17 @@ public class _Main {
 	
 	public static void main(String[] args) {
 	
-		try {
-			aufgabe_a();
-		} catch (IOException e) {
-			// TODO Automatisch generierter Erfassungsblock
-			e.printStackTrace();
-		}
-//		check();
-//		Graph g = new Graph("[[2], [2], [0, 1, 3], [2, 4, 5], [3, 6, 7], [3, 8], [4, 8], [4, 9], [5, 6], [7]]");
-//		g.printAdjacencyList();
-//		g.removeNode(3);
-//		g.removeNode(4);
-//		g.printAdjacencyList();
-//		
-//		g.setComponents();
-//		
-//		System.out.println("Anzahl der Komponenten: " + g.components.size());
-//		
-//		for (Component c : g.components) {
-//			if(c.nodes.size() % 2 == 1) {
-//				// Ungrade anzahl an knoten
-//			}
+//		try {
+//			aufgabe_a();
+//		} catch (IOException e) {
+//			// TODO Automatisch generierter Erfassungsblock
+//			e.printStackTrace();
 //		}
 		
-		// Graph Aufgabe b: Anzahl entfernter Ecken < Anzahl komponenten mit ungrader eckenzahl?
+		aufgabe_b();
+
+		
+		
 //		Graph g = new Graph("[[1], [0, 2], [1, 3, 5, 6], [2, 4], [3, 5], [2, 4], [2, 7], [6, 8], [7, 9], [8]]"); // nicht paarungsunperfekt
 //		Graph g = new Graph("[[2], [2], [0, 1, 3], [2, 4, 5], [3, 6, 7], [3, 8], [4, 8], [4, 9], [5, 6], [7]]");
 	}
@@ -47,7 +36,7 @@ public class _Main {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
 		for (int ii = 0; ii < 1000; ii++) {
 			// Anzahl der Ecken und Kanten darf nicht 0 sein.
-			// Die Anzahl der Kanten drf nicht grï¿½ï¿½er sein, als die Anzahl der max. mï¿½glichen Kanten.
+			// Die Anzahl der Kanten drf nicht größer sein, als die Anzahl der max. möglichen Kanten.
 			do {
 				n = r.nextInt(8);
 				v = r.nextInt(7);
@@ -67,6 +56,7 @@ public class _Main {
 	}
 
 	public static void aufgabe_b() {
+		int sumGraphs = 0;
 		Random r = new Random();
 		int n = 0;
 		int v = 0;
@@ -74,30 +64,42 @@ public class _Main {
 		boolean check;
 		ConnectedGraph g;
 		
-		for (int ii = 0; ii < 5; ii++) {
+		for (int ii = 0; ii < 500; ii++) {
 			do {
 				// Anzahl der Ecken und Kanten darf nicht 0 sein.
-				// Die Anzahl der Kanten drf nicht grï¿½ï¿½er sein, als die Anzahl der max. mï¿½glichen Kanten.
-				// Die Anzahl der Kanten drf nicht grï¿½ï¿½er sein, als die Anzahl der max. mï¿½glichen Kanten.
+				// Die Anzahl der Kanten drf nicht größer sein, als die Anzahl der max. mölichen Kanten.
 				do {
-					n = r.nextInt(12);
-					s = r.nextInt(n);
-					v = r.nextInt(7);
+					n = r.nextInt(20);
+					v = r.nextInt(20);
 				} while( n < 4 || v == 0  || v > (n * (n - 1))/2);
+				do {
+					s = r.nextInt(n);
+				} while(s == 0);
+				
 				g = new ConnectedGraph(n, v);
 				check = g.checkGraph(false);
 			} while(! check);
 			
-			System.out.println(g.getAdjacencyList());
-			g.removeRandomNodes(s);
+			ArrayList<Integer> removed_nodes = g.removeRandomNodes(s);
 			g.setComponents();
 			
-			int compCount = g.components.size();
-			g.
+			// Anzahl entfernter Ecken < Anzahl komponenten mit ungrader eckenzahl?
+			if (s < g.getNumberOfOddComponents()) {
+				System.out.println("Graph:");
+				System.out.println(g.getAdjacencyList());
+				System.out.println("Entfernte Ecken:");
+				System.out.println(Arrays.toString(removed_nodes.toArray()));
+				System.out.println("Komponenten");
+				for (Component cc : g.components) {
+					System.out.println(cc.getAdjacencyList());
+				}
+				System.out.println();
+				sumGraphs++;
+			}
 			
 				
 		}		
-		
+		System.out.println("Anzahl der Kontellationen: " + sumGraphs);
 		System.out.println("Fertig!");
 	}
 }

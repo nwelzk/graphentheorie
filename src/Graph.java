@@ -262,17 +262,11 @@ public class Graph implements Cloneable {
 		nodes_copy.addAll(this.nodes);
 		int counter = 0;
 		
-		System.out.println();
-		System.out.println();
-		
 		while(nodes_copy.size() > 0) {
 			Component component = new Component(counter, nodes_copy.get(0));
 			this.components.add(component);
 			nodes_copy.removeAll(component.nodes);
 			counter++;
-			System.out.println("Komponente: " + component.id);
-			component.printAdjacencyList();
-			System.out.println();
 		}
 	}
 	public int getNumberOfEvenComponents() {
