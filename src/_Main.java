@@ -6,21 +6,18 @@ import java.io.*;
 public class _Main {
 	
 	public static void main(String[] args) {
-	
-//		try {
-//			aufgabe_a();
-//		} catch (IOException e) {
-//			// TODO Automatisch generierter Erfassungsblock
-//			e.printStackTrace();
-//		}
-
+//		aufgabe_a();
 //		aufgabe_b();
+//		aufgabe_c();
 		
-		aufgabe_c();
+		int[] gesamt = {0,1,2,3,4};
+//		ArrayList<int[]> bla = getKombinations(gesamt, 2);
 		
-//		Graph g = new Graph("[[1], [0, 2], [1, 3, 5, 6], [2, 4], [3, 5], [2, 4], [2, 7], [6, 8], [7, 9], [8]]"); // nicht paarungsunperfekt
-//		Graph g = new Graph("[[2], [2], [0, 1, 3], [2, 4, 5], [3, 6, 7], [3, 8], [4, 8], [4, 9], [5, 6], [7]]");
-	}
+//		for (int aa = 1; aa <= gesamt.length; aa++) { //bis zur maximallänge der kette
+//			ArrayList<int[]> kombinationen = getKombinations();
+//			
+//		}
+	}	
 	
 	public static void check() {
 		Graph g = new Graph("[[10], [5, 8], [13], [5], [5, 7], [1, 3, 4, 10, 13], [11, 13], [4], [1], [10, 13], [0, 5, 9], [6, 12], [11], [2, 5, 6, 9]]");
@@ -36,25 +33,31 @@ public class _Main {
 		int n = 0;
 		int v = 0;
 			 
-		BufferedWriter writer = new BufferedWriter(new FileWriter(file));
-		for (int ii = 0; ii < 1000; ii++) {
-			// Anzahl der Ecken und Kanten darf nicht 0 sein.
-			// Die Anzahl der Kanten drf nicht größer sein, als die Anzahl der max. möglichen Kanten.
-			do {
-				n = r.nextInt(8);
-				v = r.nextInt(7);
-			} while( n < 4 || v == 0  || v > (n * (n - 1))/2);
-		 		
-			System.out.println(" " + n + " Ecken, min " + v + " Kanten.");
-			ConnectedGraph g = new ConnectedGraph(n, v);
-			System.out.println(g.getAdjacencyList());
-			
-			writer.write(g.getAdjacencyList());
-			writer.newLine();
-			writer.write(g.stringCheckGraph(false));
-			writer.newLine();			
-		}		
-		writer.close();
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			for (int ii = 0; ii < 1000; ii++) {
+				// Anzahl der Ecken und Kanten darf nicht 0 sein.
+				// Die Anzahl der Kanten drf nicht größer sein, als die Anzahl der max. möglichen Kanten.
+				do {
+					n = r.nextInt(8);
+					v = r.nextInt(7);
+				} while( n < 4 || v == 0  || v > (n * (n - 1))/2);
+			 		
+				System.out.println(" " + n + " Ecken, min " + v + " Kanten.");
+				ConnectedGraph g = new ConnectedGraph(n, v);
+				System.out.println(g.getAdjacencyList());
+				
+				writer.write(g.getAdjacencyList());
+				writer.newLine();
+				writer.write(g.stringCheckGraph(false));
+				writer.newLine();			
+			}		
+			writer.close();
+		} catch (IOException e) {
+			// TODO Automatisch generierter Erfassungsblock
+			e.printStackTrace();
+		}
+		
 		System.out.println("Fertig!");
 	}
 
@@ -133,4 +136,7 @@ public class _Main {
 ////				}
 //		}		
 	}
+
+//	Graph g = new Graph("[[1], [0, 2], [1, 3, 5, 6], [2, 4], [3, 5], [2, 4], [2, 7], [6, 8], [7, 9], [8]]"); // nicht paarungsunperfekt
+//	Graph g = new Graph("[[2], [2], [0, 1, 3], [2, 4, 5], [3, 6, 7], [3, 8], [4, 8], [4, 9], [5, 6], [7]]");
 }
