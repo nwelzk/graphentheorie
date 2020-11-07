@@ -333,13 +333,13 @@ public class Graph implements Cloneable {
 		return Arrays.toString(str).replace('[', '{').replace(']', '}');			
 	}
 	public String stringCheckGraph(boolean print_details_) {
-		if (this.checkGraph(print_details_)) {
+		if (this.checkGraphIsMatchingPerfect(print_details_)) {
 			return "Der Graph ist paarungsunperfekt.";
 		}
 		return "Der Graph ist nicht paarungsunperfekt.";
 	}
 	
-	public boolean checkGraph(boolean print_details_) {
+	public boolean checkGraphIsMatchingPerfect(boolean print_details_) {
 		Graph clone = (Graph) this.clone();
 		this.clone = clone;
 		
@@ -381,6 +381,18 @@ public class Graph implements Cloneable {
 			for (Node leaf : leafs) {
 				this.clone.removeNodeWithNeighbors(leaf);
 			}
+		}		
+		return false;
+	}
+	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsivenRemoteNodes(ArrayList<Integer> s) {
+		Graph clone = this.clone();
+		for (int ii : s) {
+			clone.removeNode(ii);
+		}
+		clone.setComponents();
+		
+		if (s.size() < clone.getNumberOfOddComponents()) {
+			return true;
 		}		
 		return false;
 	}

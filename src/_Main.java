@@ -13,10 +13,10 @@ public class _Main {
 //			// TODO Automatisch generierter Erfassungsblock
 //			e.printStackTrace();
 //		}
-		
-		aufgabe_b();
 
+//		aufgabe_b();
 		
+		aufgabe_c();
 		
 //		Graph g = new Graph("[[1], [0, 2], [1, 3, 5, 6], [2, 4], [3, 5], [2, 4], [2, 7], [6, 8], [7, 9], [8]]"); // nicht paarungsunperfekt
 //		Graph g = new Graph("[[2], [2], [0, 1, 3], [2, 4, 5], [3, 6, 7], [3, 8], [4, 8], [4, 9], [5, 6], [7]]");
@@ -25,6 +25,9 @@ public class _Main {
 	public static void check() {
 		Graph g = new Graph("[[10], [5, 8], [13], [5], [5, 7], [1, 3, 4, 10, 13], [11, 13], [4], [1], [10, 13], [0, 5, 9], [6, 12], [11], [2, 5, 6, 9]]");
 		System.out.println(g.stringCheckGraph(true));
+	}
+	public static void s() {
+		System.out.println();
 	}
 	
 	public static void aufgabe_a() throws IOException {
@@ -64,7 +67,7 @@ public class _Main {
 		boolean check;
 		ConnectedGraph g;
 		
-		for (int ii = 0; ii < 500; ii++) {
+		for (int ii = 0; ii < 1500; ii++) {
 			do {
 				// Anzahl der Ecken und Kanten darf nicht 0 sein.
 				// Die Anzahl der Kanten drf nicht größer sein, als die Anzahl der max. mölichen Kanten.
@@ -77,8 +80,11 @@ public class _Main {
 				} while(s == 0);
 				
 				g = new ConnectedGraph(n, v);
-				check = g.checkGraph(false);
+				check = g.checkGraphIsMatchingPerfect(false);
 			} while(! check);
+			
+			Graph c = g.clone();
+			
 			
 			ArrayList<Integer> removed_nodes = g.removeRandomNodes(s);
 			g.setComponents();
@@ -86,12 +92,15 @@ public class _Main {
 			// Anzahl entfernter Ecken < Anzahl komponenten mit ungrader eckenzahl?
 			if (s < g.getNumberOfOddComponents()) {
 				System.out.println("Graph:");
-				System.out.println(g.getAdjacencyList());
+				System.out.println(c.getAdjacencyList());
 				System.out.println("Entfernte Ecken:");
 				System.out.println(Arrays.toString(removed_nodes.toArray()));
-				System.out.println("Komponenten");
-				for (Component cc : g.components) {
-					System.out.println(cc.getAdjacencyList());
+				System.out.println("Komponenten:");
+				for (Component component : g.components) {
+					System.out.println();
+					System.out.print("Komponente: " + component.id + " - Ecken ");
+					System.out.println(component.getNodeList());
+					System.out.println(component.getAdjacencyList());
 				}
 				System.out.println();
 				sumGraphs++;
@@ -101,5 +110,27 @@ public class _Main {
 		}		
 		System.out.println("Anzahl der Kontellationen: " + sumGraphs);
 		System.out.println("Fertig!");
+	}
+
+	public static void aufgabe_c() {
+		
+ 
+		
+//		
+//		for (int ii = 1; ii < g.nodes.size(); ii++) { // Anzahl der entfernten Ecken;
+//			for (int jj = 1; jj <= ii; jj++) {
+//				ArrayList<Integer> arr = new ArrayList<Integer>();
+//				
+//				for (int aa = 0; aa < g.nodes.size(); aa++) {
+//					//
+//				}
+//				
+////					arr.add(node.index);
+////					System.out.println(node.index);
+//			}
+////				if(g.checkGraphBreakIntoMoreOddSizedComponentsAsivenRemoteNodes(arr)) {
+////					System.out.println(arr.toString());
+////				}
+//		}		
 	}
 }
