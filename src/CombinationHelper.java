@@ -1,51 +1,60 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class Proof {
+public class CombinationHelper {
 	
-	public ArrayList<ArrayList<Integer>> bla;
+	public ArrayList<ArrayList<Integer>> combinations;
 	private int laenge;
 	
-	public Proof(int laenge) {
+	private Integer[] nodes;
+	
+	public CombinationHelper(int laenge, Integer[] indexArr) {
 //		aufgabe_a();
 //		aufgabe_b();
 //		aufgabe_c();
-		
+	
 		this.laenge = laenge;
-		this.bla = new ArrayList<ArrayList<Integer>>();
+		this.nodes = indexArr;
+		this.combinations = new ArrayList<ArrayList<Integer>>();
 		// Füllt eine Liste mit Listen, in denen der Wurzelknoten für den baum steckt.
 		
-		int[] gesamt = {0,1,2,3};
-		
-		for (int node : gesamt) {
-			ArrayList<Integer> start = new ArrayList<Integer>();
-			start.add(node);
-			this.routine(gesamt, start);
+		if (laenge == 1) {
+			for (Integer ii : indexArr) {
+				ArrayList<Integer> p = new ArrayList<Integer>();
+				p.add(ii);
+				this.combinations.add(p);
+			}
+		}else {
+			for (int node : indexArr) {
+				ArrayList<Integer> start = new ArrayList<Integer>();
+				start.add(node);
+				this.routine(start);
+			}
 		}
 
-	}	
+	}
 	
-	public void routine(int[] gesamt, ArrayList<Integer> start) {
+	public void routine(ArrayList<Integer> start) {
 		
-		for (int node : gesamt) {	
+		for (int node : this.nodes) {	
 			if (start.get(start.size()-1) < node) {
 				ArrayList<Integer> newList = new ArrayList<Integer>();
 				newList.addAll(start);
 				// Reihe ist aufsteigend
 				newList.add(node);
 				if (newList.size() == this.laenge) {
-					if (! this.bla.contains(newList)) {
-						this.bla.add(newList);
+					if (! this.combinations.contains(newList)) {
+						this.combinations.add(newList);
 					}
 				}
 				else {
-					this.routine(gesamt, newList);
+					this.routine(newList);
 				}
 			}
 		}
 	}
-	public void printBla() {
-		for (ArrayList<Integer> arrayList : this.bla) {
+	public void printCombinations() {
+		for (ArrayList<Integer> arrayList : this.combinations) {
 			System.out.println(Arrays.toString(arrayList.toArray()));
 		}
 	}

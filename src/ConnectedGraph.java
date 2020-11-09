@@ -30,4 +30,5 @@ public class ConnectedGraph extends Graph {
 			pointer = receiver;
 		}
 	}
+	
 }

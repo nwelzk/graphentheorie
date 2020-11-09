@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Random;
 
 public class Graph implements Cloneable {
@@ -72,7 +73,7 @@ public class Graph implements Cloneable {
 	
 	@Override
 	public Graph clone() {	
-		return new Graph(this.createAdjacencyMatrix());
+		return new Graph(this.getAdjacencyList());
 	}
 	
 	public void createRandomRelations(int amount_) {
@@ -282,8 +283,29 @@ public class Graph implements Cloneable {
 		return this.components.size() - this.getNumberOfEvenComponents();
 	}
 	
-	
-	public String getNodeList() {
+	public ArrayList<Integer> getSortedNodesList() {
+//		int[] arr = this.getNodesArray();
+//		Arrays.sort(arr);
+//		ArrayList<Integer> list = new ArrayList<Integer>();
+
+		ArrayList<Integer> intList = new ArrayList<Integer>();
+		
+		for (int ii = 0; ii < this.nodes.size(); ii++) {			
+			intList.add(this.nodes.get(ii).index);
+		} 
+		Collections.sort(intList);
+		
+		return intList;
+	}
+	public int[] getNodesArray() {
+		int[] intArray = new int[this.nodes.size()];
+		
+		for (int ii = 0; ii < this.nodes.size(); ii++) {			
+			intArray[ii] = this.nodes.get(ii).index;
+		}   
+		return intArray;
+	}
+	public String getNodesList() {
 		String[] strArray = new String[this.nodes.size()];
 		
 		for (int ii = 0; ii < this.nodes.size(); ii++) {			
@@ -396,6 +418,19 @@ public class Graph implements Cloneable {
 		}		
 		return false;
 	}
+	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(Integer[] s) {
+		Graph clone = this.clone();
+		for (Integer ii : s) {
+			clone.removeNode(ii);
+		}
+		clone.setComponents();
+		
+		if (s.length < clone.getNumberOfOddComponents()) {
+			return true;
+		}		
+		return false;
+	}
+	
 	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(Node[] s) {
 		Graph clone = this.clone();
 		for (Node ii : s) {
