@@ -406,39 +406,40 @@ public class Graph implements Cloneable {
 		}		
 		return false;
 	}
+	
 	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(ArrayList<Node> s) {
-		Graph clone = this.clone();
-		for (Node ii : s) {
-			clone.removeNode(ii);
-		}
-		clone.setComponents();
 		
-		if (s.size() < clone.getNumberOfOddComponents()) {
+		for (Node ii : s) {
+			this.removeNode(ii);
+		}
+		this.setComponents();
+		
+		if (s.size() < this.getNumberOfOddComponents()) {
 			return true;
 		}		
 		return false;
 	}
 	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(Integer[] s) {
-		Graph clone = this.clone();
-		for (Integer ii : s) {
-			clone.removeNode(ii);
-		}
-		clone.setComponents();
 		
-		if (s.length < clone.getNumberOfOddComponents()) {
+		for (Integer ii : s) {
+			this.removeNode(ii);
+		}
+		this.setComponents();
+		
+		if (s.length < this.getNumberOfOddComponents()) {
 			return true;
 		}		
 		return false;
 	}
 	
 	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(Node[] s) {
-		Graph clone = this.clone();
-		for (Node ii : s) {
-			clone.removeNode(ii);
-		}
-		clone.setComponents();
 		
-		if (s.length < clone.getNumberOfOddComponents()) {
+		for (Node ii : s) {
+			this.removeNode(ii);
+		}
+		this.setComponents();
+		
+		if (s.length < this.getNumberOfOddComponents()) {
 			return true;
 		}		
 		return false;
