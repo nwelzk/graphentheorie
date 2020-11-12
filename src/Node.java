@@ -14,9 +14,9 @@ public class Node implements Comparable<Node>{
 	}
 	
 	@Override
-	public int compareTo(Node n)
+	public int compareTo(Node n_)
 	{
-		return n.index - this.index;
+		return n_.index - this.index;
 	}
 	
 	public boolean isLeaf() {
