@@ -4,6 +4,7 @@ import java.util.Random;
 public class ConnectedGraph extends Graph {
 
 	
+	
 	public ConnectedGraph(int max_nodes_count_, int min_edges_combined_, boolean checkIfNotMatchingPerfect_) {
 		super();
 		
@@ -36,13 +37,10 @@ public class ConnectedGraph extends Graph {
 			
 			if(checkIfNotMatchingPerfect_) {
 				check = this.checkGraphIsMatchingPerfect(false);
-			}
-			
-			
+			}	
 		} while(checkIfNotMatchingPerfect_ == true && check == false );
 
-	}
-	
+	}	
 	public ConnectedGraph(int nodes_count_, int min_edges_count_) {
 		super(nodes_count_);
 		

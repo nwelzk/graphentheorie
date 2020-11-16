@@ -284,10 +284,6 @@ public class Graph implements Cloneable {
 	}
 	
 	public ArrayList<Integer> getSortedNodesList() {
-//		int[] arr = this.getNodesArray();
-//		Arrays.sort(arr);
-//		ArrayList<Integer> list = new ArrayList<Integer>();
-
 		ArrayList<Integer> intList = new ArrayList<Integer>();
 		
 		for (int ii = 0; ii < this.nodes.size(); ii++) {			
@@ -334,7 +330,7 @@ public class Graph implements Cloneable {
 		String[] strArray = new String[this.nodes.size()];
 		
 		for (int ii = 0; ii < this.nodes.size(); ii++) {	
-			int[] arr = this.nodes.get(ii).getNeighborIndexArray(); ///
+			int[] arr = this.nodes.get(ii).getNeighborIndexArray();
 			Arrays.sort(arr);
 			strArray[ii] = Arrays.toString(arr);
 		}   
@@ -407,42 +403,41 @@ public class Graph implements Cloneable {
 		return false;
 	}
 	
-	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(ArrayList<Node> s_) {
+	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(ArrayList<Node> nodesToRemove_) {
 		
-		for (Node ii : s_) {
+		for (Node ii : nodesToRemove_) {
 			this.removeNode(ii);
 		}
 		this.setComponents();
 		
-		if (s_.size() < this.getNumberOfOddComponents()) {
+		if (nodesToRemove_.size() < this.getNumberOfOddComponents()) {
 			return true;
 		}		
 		return false;
 	}
-	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(Integer[] s_) {
+	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(Integer[] nodesToRemove_) {
 		
-		for (Integer ii : s_) {
+		for (Integer ii : nodesToRemove_) {
 			this.removeNode(ii);
 		}
 		this.setComponents();
-		
-		if (s_.length < this.getNumberOfOddComponents()) {
+
+		if (nodesToRemove_.length < this.getNumberOfOddComponents()) {
 			return true;
 		}		
 		return false;
 	}
-	
-	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(Node[] s_) {
+	public boolean checkGraphBreakIntoMoreOddSizedComponentsAsGivenRemoteNodes(Node[] nodesToRemove_) {
 		
-		for (Node ii : s_) {
+		for (Node ii : nodesToRemove_) {
 			this.removeNode(ii);
 		}
+		System.out.println(this.getAdjacencyList());
 		this.setComponents();
 		
-		if (s_.length < this.getNumberOfOddComponents()) {
+		if (nodesToRemove_.length < this.getNumberOfOddComponents()) {
 			return true;
 		}		
 		return false;
 	}
-	
 }

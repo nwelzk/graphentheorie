@@ -4,15 +4,11 @@ import java.util.Arrays;
 public class CombinationHelper {
 	
 	public ArrayList<ArrayList<Integer>> combinations;
+	private Integer[] nodes;
 	private int laenge;
 	
-	private Integer[] nodes;
-	
 	public CombinationHelper(int laenge_, Integer[] indexArr_) {
-//		aufgabe_a();
-//		aufgabe_b();
-//		aufgabe_c();
-	
+
 		this.laenge = laenge_;
 		this.nodes = indexArr_;
 		this.combinations = new ArrayList<ArrayList<Integer>>();
@@ -33,7 +29,7 @@ public class CombinationHelper {
 		}
 
 	}
-	
+
 	public void routine(ArrayList<Integer> start_) {
 		
 		for (int node : this.nodes) {	
