@@ -1,7 +1,7 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class Node implements Comparable<Node>{
+public class Node {
 	
 	public int index; 					// Index der Ecke im Ausgangsgraphen.
 	public String name; 				// Name der Ecke;
@@ -12,13 +12,7 @@ public class Node implements Comparable<Node>{
 		this.name = identifyName();
 		this.neighbors = new ArrayList<Node>();
 	}
-	
-	@Override
-	public int compareTo(Node n)
-	{
-		return n.index - this.index;
-	}
-	
+
 	public boolean isLeaf() {
 		return (this.getVertexDegree() > 1)? false : true; // Angabe, ob die Ecke ein Blatt ist.
 	}
@@ -60,7 +54,7 @@ public class Node implements Comparable<Node>{
 		for (Node node : neighbors) {
 			node.removeNeighbor(this);
 		}
-		this.neighbors = null;
+		this.neighbors = new ArrayList<Node>();
 	}
 	public int leafs_count() {
 		int cnt = 0;
